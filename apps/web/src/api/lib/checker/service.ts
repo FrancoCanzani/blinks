@@ -306,7 +306,7 @@ export class MonitorCheckService {
       | FormData
       | Record<string, unknown>
       | null,
-    timeoutThresholdMs?: number
+    timeoutThresholdMs?: number | null
   ): Promise<CheckResult> {
     if (!urlToCheck || typeof urlToCheck !== "string") {
       throw new Error("Valid URL is required for HTTP check");
@@ -388,7 +388,7 @@ export class MonitorCheckService {
       | FormData
       | Record<string, unknown>
       | null,
-    timeoutThresholdMs?: number
+    timeoutThresholdMs?: number | null
   ): Promise<CheckResult> {
     const checkStartTime = performance.now();
     const result: CheckResult = {

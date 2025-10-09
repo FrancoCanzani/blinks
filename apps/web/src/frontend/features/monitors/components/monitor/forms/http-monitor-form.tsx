@@ -617,8 +617,8 @@ export default function HttpMonitorForm({
           </div>
         </div>
 
-        <div className="flex justify-end space-x-4">
-          <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
+        <div className="flex justify-end space-x-4 pb-4">
+          <Button type="button" variant="ghost" size="xs" onClick={onCancel}>
             Cancel
           </Button>
           <form.Subscribe
@@ -627,7 +627,7 @@ export default function HttpMonitorForm({
             {([canSubmit, formIsSubmitting]) => (
               <Button
                 type="submit"
-                size="sm"
+                size="xs"
                 disabled={isSubmitting || formIsSubmitting || !canSubmit}
               >
                 {isSubmitting || formIsSubmitting

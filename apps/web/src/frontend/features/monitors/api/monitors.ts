@@ -20,8 +20,6 @@ export async function fetchMonitors({
       queryFn: fetchWorkspaces,
     });
 
-    console.log(allWorkspaces);
-
     const targetWorkspace = allWorkspaces.find(
       (ws) => ws.slug === workspaceSlug
     );
@@ -47,8 +45,6 @@ export async function fetchMonitors({
         },
       }
     );
-
-    console.log(monitorsResponse);
 
     if (!monitorsResponse.ok) {
       const errorText = await monitorsResponse.text();

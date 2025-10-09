@@ -150,13 +150,13 @@ export interface MonitorConfig {
   method?: string;
   intervalMs: number;
   region: string;
-  createdAt: number;
+  createdAt: string;
   consecutiveFailures: number;
   lastStatusCode?: number;
   headers?: Record<string, string>;
   body?: string | FormData | URLSearchParams | Record<string, unknown> | null;
-  degradedThresholdMs?: number;
-  timeoutThresholdMs?: number;
+  degradedThresholdMs?: number | null;
+  timeoutThresholdMs?: number | null;
 }
 
 export interface CheckResult {

@@ -22,15 +22,21 @@ export const MonitorConfigSchema = z
     method: z.enum(["GET", "POST", "HEAD"]).optional(),
     intervalMs: z.number().positive().min(30000),
     region: z.string().min(1),
-    createdAt: z.number().positive(),
+    createdAt: z.coerce.string(),
     consecutiveFailures: z.number().min(0),
     lastStatusCode: z.number().int().min(100).max(599).optional(),
     headers: z.record(z.string(), z.string()).optional(),
     body: z
       .union([z.string(), z.record(z.string(), z.unknown()), z.null()])
       .optional(),
-    degradedThresholdMs: z.number().positive().optional(),
-    timeoutThresholdMs: z.number().positive().min(1000).max(300000).optional(),
+    degradedThresholdMs: z.number().positive().nullable().optional(),
+    timeoutThresholdMs: z
+      .number()
+      .positive()
+      .min(1000)
+      .max(300000)
+      .nullable()
+      .optional(),
   })
   .refine(
     (data) => {

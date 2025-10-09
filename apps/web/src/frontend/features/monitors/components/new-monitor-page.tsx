@@ -114,7 +114,7 @@ export default function NewMonitorPage() {
       <div className="container mx-auto max-w-4xl p-4">
         <div className="space-y-8">
           <div>
-            <h1 className="text-xl font-medium">Create HTTP Monitor</h1>
+            <h1 className="text-lg font-medium">Create HTTP Monitor</h1>
             <p className="text-muted-foreground mt-1 text-sm">
               Configure an HTTP/HTTPS endpoint monitor.
             </p>
@@ -153,7 +153,7 @@ export default function NewMonitorPage() {
     <div className="container mx-auto max-w-5xl p-4">
       <div className="space-y-8">
         <div>
-          <h1 className="text-xl font-medium">Invalid Monitor Type</h1>
+          <h1 className="text-lg font-medium">Invalid Monitor Type</h1>
           <p className="text-muted-foreground mt-1 text-sm">
             The specified monitor type is not supported.
           </p>

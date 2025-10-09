@@ -9,6 +9,7 @@ import MonitorsTable from "./monitors/monitors-table";
 
 export default function MonitorsPage() {
   const monitorsData = Route.useLoaderData();
+
   const [selectedMonitors, setSelectedMonitors] = useState<
     MonitorWithMetrics[]
   >([]);

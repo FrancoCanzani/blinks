@@ -97,6 +97,7 @@ export async function handleMonitorCheckerCron(
               intervalMs: monitor.interval,
               region,
               createdAt: monitor.created_at,
+              consecutiveFailures: 0,
               headers: monitor.headers,
               body: monitor.body,
               userEmails,
