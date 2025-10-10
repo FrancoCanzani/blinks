@@ -3,6 +3,7 @@ import { useWorkspaces } from "@/frontend/hooks/use-workspaces";
 import { Route } from "@/frontend/routes";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/use-auth";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
@@ -12,6 +13,17 @@ export default function LandingPage() {
   const { isAuthenticated, isLoading } = useAuth();
   const seededWorkspaces = Route.useLoaderData();
   const { workspaces, isLoading: workspacesLoading } = useWorkspaces();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 10);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   let dashboardLinkTo = "/auth/log-in";
 
@@ -19,7 +31,6 @@ export default function LandingPage() {
     const list =
       workspaces && workspaces.length > 0 ? workspaces : seededWorkspaces || [];
 
-    // Check if user needs onboarding
     const onboardingStatus = checkOnboardingStatus(list, false);
 
     if (onboardingStatus.needsOnboarding) {
@@ -39,40 +50,17 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="relative mx-auto min-h-screen w-full max-w-5xl p-4 sm:p-6">
-      <div
-        className="pointer-events-none fixed inset-0 z-[-1]"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, #e2e8f0 1px, transparent 1px),
-            linear-gradient(to bottom, #e2e8f0 1px, transparent 1px)
-          `,
-          backgroundSize: "100px 80px",
-          backgroundPosition: "0 0",
-          opacity: 0.3,
-          WebkitMaskImage:
-            "radial-gradient(ellipse 70% 60% at 50% 100%, #000 60%, transparent 100%)",
-          maskImage:
-            "radial-gradient(ellipse 70% 60% at 50% 100%, #000 60%, transparent 100%)",
-        }}
-      />
-      <div
-        className="pointer-events-none fixed inset-0 z-[-1] hidden dark:block"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 255, 255, 0.1), transparent 70%), #000000",
-        }}
-      />
-      <header className="py-8">
-        <nav className="flex items-center justify-between">
-          <a
-            href="https://github.com/FrancoCanzani/shamva"
-            target="_blank"
-            className="group text-muted-foreground inline-flex items-center justify-start gap-x-2 font-mono text-sm tracking-tighter"
+    <div className="relative mx-auto min-h-screen w-full">
+      <header
+        className={`bg-background/80 sticky top-0 z-50 backdrop-blur-md transition-all duration-200 ${isScrolled ? "border-border/50 border-b py-2" : "py-4"}`}
+      >
+        <nav className="mx-auto flex max-w-5xl items-center justify-between px-4 sm:px-6">
+          <h1
+            className={`font-medium tracking-wide transition-all duration-200 ${isScrolled ? "text-2xl" : "text-3xl"}`}
+            style={{ fontFamily: "Helvetica, Arial, sans-serif" }}
           >
-            Shamva is <span className="underline">Open Source</span>
-            <ArrowRight className="h-3 w-3 transition duration-200 group-hover:translate-x-1" />
-          </a>
+            Shamva
+          </h1>
           <div className="text-muted-foreground flex items-center justify-end gap-3 text-sm">
             <a href="#" className="hover:underline">
               Docs
@@ -85,18 +73,20 @@ export default function LandingPage() {
         </nav>
       </header>
 
-      <main className="space-y-10 py-16">
+      <main className="mx-auto flex w-full max-w-5xl flex-col items-center space-y-10 px-4 py-16 sm:px-6">
+        <a
+          href="https://github.com/FrancoCanzani/shamva"
+          target="_blank"
+          className="group text-muted-foreground inline-flex items-center justify-start gap-x-2 font-mono text-sm tracking-tighter"
+        >
+          Shamva is <span className="underline">Open Source</span>
+          <ArrowRight className="h-3 w-3 transition duration-200 group-hover:translate-x-1" />
+        </a>
         <div className="space-y-6">
-          <h1
-            className="text-3xl font-medium tracking-wide"
-            style={{ fontFamily: "Helvetica, Arial, sans-serif" }}
-          >
-            Shamva
-          </h1>
-          <h2 className="text-foreground text-6xl font-medium text-balance">
+          <h2 className="text-foreground text-center text-6xl font-medium text-balance">
             Uptime Monitoring that scales with your business
           </h2>
-          <p className="max-w-2xl tracking-tighter text-pretty">
+          <p className="text-muted-foreground mx-auto max-w-2xl text-center tracking-tighter text-pretty">
             Shamva provides real-time monitoring, instant alerts, and
             comprehensive incident management to keep your services running
             smoothly.
@@ -110,7 +100,7 @@ export default function LandingPage() {
       </main>
 
       <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <div className="flex w-full items-center justify-center">
             <img
               src="/src/frontend/assets/dashboard.png"
@@ -127,14 +117,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="space-y-8 py-16">
-        <div className="space-y-6">
+      <section className="mx-auto max-w-5xl space-y-8 px-4 py-16 sm:px-6">
+        <div className="space-y-2">
           <h2 className="text-foreground text-2xl font-medium">
             Everything You Need for Reliable Monitoring
           </h2>
-          <p className="max-w-xl tracking-tighter">
-            From simple uptime checks to complex incident management, Shamva has
-            you covered.
+          <p className="text-muted-foreground max-w-xl tracking-tighter">
+            From simple uptime checks to incident management, Shamva has you
+            covered.
           </p>
         </div>
 
@@ -209,9 +199,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="py-16">
+      <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
         <div className="space-y-6">
-          <h2 className="text-foreground w-fit bg-stone-50 text-xl font-medium underline underline-offset-4">
+          <h2 className="text-foreground dark:bg-background w-fit bg-stone-50 text-xl font-medium underline underline-offset-4">
             How it works
           </h2>
           <div className="max-w-2xl space-y-6">
@@ -255,11 +245,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="py-16">
+      <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
         <div className="space-y-6">
           <h2
             id="pricing"
-            className="text-foreground w-fit bg-stone-50 text-xl font-medium underline underline-offset-4"
+            className="text-foreground dark:bg-background w-fit bg-stone-50 text-xl font-medium underline underline-offset-4"
           >
             Pricing
           </h2>
@@ -420,9 +410,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="py-16">
+      <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
         <div className="space-y-6">
-          <h2 className="text-foreground w-fit bg-stone-50 text-xl font-medium underline underline-offset-4 dark:bg-stone-800">
+          <h2 className="text-foreground dark:bg-background w-fit bg-stone-50 text-xl font-medium underline underline-offset-4">
             Frequently asked questions
           </h2>
           <div className="max-w-2xl space-y-6">
@@ -476,7 +466,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="py-16">
+      <footer className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
         <div className="space-y-12">
           <div className="grid gap-8 md:grid-cols-3">
             <div className="space-y-4">
