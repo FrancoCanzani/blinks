@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/frontend/components/ui/select";
+import { Separator } from "@/frontend/components/ui/separator";
 import { Textarea } from "@/frontend/components/ui/textarea";
 import { monitoringRegions } from "@/frontend/lib/constants";
 import { HttpMonitorSchema } from "@/frontend/lib/schemas";
@@ -229,101 +230,75 @@ export default function HttpMonitorForm({
             </FormField>
           </div>
 
-          <form.Subscribe
-            selector={(state) => ({
-              interval: state.values.interval,
-              regions: state.values.regions,
-            })}
-          >
-            {({ interval, regions }) => {
-              const checksPerDay =
-                interval > 0
-                  ? Math.round(
-                      ((24 * 60 * 60 * 1000) / interval) * (regions.length || 1)
-                    )
-                  : 0;
-
-              return (
-                <div className="text-muted-foreground text-sm">
-                  <span className="font-medium">Checks per day:</span>{" "}
-                  {checksPerDay.toLocaleString()}
-                  <span className="ml-1 text-xs">
-                    ({regions.length || 1} region
-                    {(regions.length || 1) !== 1 ? "s" : ""} ×{" "}
-                    {Math.round((24 * 60 * 60 * 1000) / interval)} checks/day)
-                  </span>
-                </div>
-              );
-            }}
-          </form.Subscribe>
-        </div>
-
-        <div id="check-config" className="space-y-4">
-          <h2 className="font-medium">HTTP Configuration</h2>
-          <div className="flex flex-1 gap-4">
-            <FormField>
-              <form.Field name="method">
-                {(field) => (
-                  <>
-                    <Label htmlFor="method">Method</Label>
-                    <Select
-                      onValueChange={(value) =>
-                        field.handleChange(value as "GET" | "POST" | "HEAD")
-                      }
-                      value={field.state.value}
-                    >
-                      <SelectTrigger
-                        id="method"
-                        className={
-                          field.state.meta.errors?.length
-                            ? "border-destructive"
-                            : ""
+          <div id="check-config" className="space-y-4">
+            <div className="flex flex-1 gap-4">
+              <FormField>
+                <form.Field name="method">
+                  {(field) => (
+                    <>
+                      <Label htmlFor="method">Method</Label>
+                      <Select
+                        onValueChange={(value) =>
+                          field.handleChange(value as "GET" | "POST" | "HEAD")
                         }
+                        value={field.state.value}
                       >
-                        <SelectValue placeholder="Select method" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem value="GET">GET</SelectItem>
-                          <SelectItem value="POST">POST</SelectItem>
-                          <SelectItem value="HEAD">HEAD</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    {field.state.meta.errors?.length > 0 && (
-                      <ErrorMessage errors={field.state.meta.errors[0]} />
-                    )}
-                  </>
-                )}
-              </form.Field>
-            </FormField>
-
-            <FormField className="w-full flex-1">
-              <form.Field name="url">
-                {(field) => (
-                  <>
-                    <Label htmlFor="url">URL to Monitor</Label>
-                    <Input
-                      id="url"
-                      name="url"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
-                      placeholder="https://example.com/api"
-                      className={cn(
-                        "flex-1",
-                        field.state.meta.errors?.length && "border-destructive"
+                        <SelectTrigger
+                          id="method"
+                          className={
+                            field.state.meta.errors?.length
+                              ? "border-destructive"
+                              : ""
+                          }
+                        >
+                          <SelectValue placeholder="Select method" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="GET">GET</SelectItem>
+                            <SelectItem value="POST">POST</SelectItem>
+                            <SelectItem value="HEAD">HEAD</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      {field.state.meta.errors?.length > 0 && (
+                        <ErrorMessage errors={field.state.meta.errors[0]} />
                       )}
-                    />
-                    {field.state.meta.errors?.length > 0 && (
-                      <ErrorMessage errors={field.state.meta.errors[0]} />
-                    )}
-                  </>
-                )}
-              </form.Field>
-            </FormField>
+                    </>
+                  )}
+                </form.Field>
+              </FormField>
+
+              <FormField className="w-full flex-1">
+                <form.Field name="url">
+                  {(field) => (
+                    <>
+                      <Label htmlFor="url">URL to Monitor</Label>
+                      <Input
+                        id="url"
+                        name="url"
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        onBlur={field.handleBlur}
+                        placeholder="https://example.com/api"
+                        className={cn(
+                          "flex-1",
+                          field.state.meta.errors?.length &&
+                            "border-destructive"
+                        )}
+                      />
+                      {field.state.meta.errors?.length > 0 && (
+                        <ErrorMessage errors={field.state.meta.errors[0]} />
+                      )}
+                    </>
+                  )}
+                </form.Field>
+              </FormField>
+            </div>
           </div>
         </div>
+
+        <Separator />
 
         <div id="monitoring-regions" className="space-y-4">
           <form.Field name="regions">
@@ -331,21 +306,15 @@ export default function HttpMonitorForm({
               <>
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <h2 className="font-medium">Monitoring Regions *</h2>
+                    <h2 className="font-medium">Monitoring Regions</h2>
                     <span className="text-muted-foreground text-xs">
                       {field.state.value.length} region
                       {field.state.value.length !== 1 ? "s" : ""} selected
                     </span>
                   </div>
-                  <p className="text-muted-foreground text-xs">
-                    * Regions are a best effort and not a guarantee. Monitors
-                    will not necessarily be instantiated in the hinted region,
-                    but instead instantiated in a data center selected to
-                    minimize latency.
-                  </p>
                 </div>
 
-                <div className="p-2">
+                <div className="p-1">
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     {[
                       "North America",
@@ -432,6 +401,8 @@ export default function HttpMonitorForm({
           </form.Field>
         </div>
 
+        <Separator />
+
         <div id="response-time-thresholds" className="space-y-4">
           <h2 className="font-medium">Response Time Thresholds</h2>
           <div className="flex flex-1 gap-4">
@@ -510,6 +481,8 @@ export default function HttpMonitorForm({
             </FormField>
           </div>
         </div>
+
+        <Separator />
 
         <div id="advanced-options" className="space-y-4">
           <h2 className="font-medium">Advanced Options</h2>

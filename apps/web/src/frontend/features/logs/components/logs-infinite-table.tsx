@@ -39,8 +39,6 @@ export function LogsInfiniteTable() {
       staleTime: 15_000,
     });
 
-  console.log(data);
-
   const { rows, counts } = useMemo(() => {
     const flat = (data?.pages || []).flatMap((p) => p.data);
 
@@ -217,7 +215,7 @@ export function LogsInfiniteTable() {
                       <div className="flex-none font-medium uppercase">
                         {log.check_type === "tcp" ? "TCP" : log.method}
                       </div>
-                      <div className="w-8 flex-none">
+                      <div className="w-10 flex-none">
                         {typeof log.latency === "number" && log.latency >= 0 ? (
                           <span>{Math.round(log.latency)}ms</span>
                         ) : (

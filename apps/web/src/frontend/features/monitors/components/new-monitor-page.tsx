@@ -2,10 +2,12 @@ import { useWorkspaces } from "@/frontend/hooks/use-workspaces";
 import { ApiResponse, Monitor } from "@/frontend/lib/types";
 import { Route } from "@/frontend/routes/dashboard/$workspaceSlug/monitors/new/$type";
 import {
+  Link,
   useNavigate,
   useRouteContext,
   useRouter,
 } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import HttpMonitorForm from "./monitor/forms/http-monitor-form";
@@ -112,13 +114,19 @@ export default function NewMonitorPage() {
   if (type === "http") {
     return (
       <div className="container mx-auto max-w-4xl p-4">
-        <div className="space-y-8">
-          <div>
-            <h1 className="text-lg font-medium">Create HTTP Monitor</h1>
-            <p className="text-muted-foreground mt-1 text-sm">
-              Configure an HTTP/HTTPS endpoint monitor.
-            </p>
-          </div>
+        <div className="pb-4">
+          <Link
+            to="/dashboard/$workspaceSlug/monitors"
+            params={{ workspaceSlug: workspaceSlug }}
+            className="group text-muted-foreground inline-flex items-center justify-start gap-x-1 text-xs"
+          >
+            <ArrowLeft className="size-3 transition duration-200 group-hover:-translate-x-1" />
+            Back to dashboard
+          </Link>
+        </div>
+
+        <div className="space-y-6">
+          <h1 className="font-medium">Create HTTP Monitor</h1>
           <HttpMonitorForm
             onSubmit={handleSubmit}
             onCancel={handleCancel}
@@ -131,13 +139,18 @@ export default function NewMonitorPage() {
   } else if (type === "tcp") {
     return (
       <div className="container mx-auto max-w-4xl p-4">
+        <div className="pb-4">
+          <Link
+            to="/dashboard/$workspaceSlug/monitors"
+            params={{ workspaceSlug: workspaceSlug }}
+            className="group text-muted-foreground inline-flex items-center justify-start gap-x-1 text-xs"
+          >
+            <ArrowLeft className="size-3 transition duration-200 group-hover:-translate-x-1" />
+            Back to dashboard
+          </Link>
+        </div>
         <div className="space-y-8">
-          <div>
-            <h1 className="text-xl font-medium">Create TCP Monitor</h1>
-            <p className="text-muted-foreground mt-1 text-sm">
-              Configure a TCP connection monitor.
-            </p>
-          </div>
+          <h1 className="font-medium">Create TCP Monitor</h1>
           <TcpMonitorForm
             onSubmit={handleSubmit}
             onCancel={handleCancel}

@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/frontend/components/ui/select";
+import { Separator } from "@/frontend/components/ui/separator";
 import { monitoringRegions } from "@/frontend/lib/constants";
 import { TcpMonitorSchema } from "@/frontend/lib/schemas";
 import { cn } from "@/frontend/lib/utils";
@@ -182,68 +183,40 @@ export default function TcpMonitorForm({
               </form.Field>
             </FormField>
           </div>
-
-          <form.Subscribe
-            selector={(state) => ({
-              interval: state.values.interval,
-              regions: state.values.regions,
-            })}
-          >
-            {({ interval, regions }) => {
-              const checksPerDay =
-                interval > 0
-                  ? Math.round(
-                      ((24 * 60 * 60 * 1000) / interval) * (regions.length || 1)
-                    )
-                  : 0;
-
-              return (
-                <div className="text-muted-foreground text-sm">
-                  <span className="font-medium">Checks per day:</span>{" "}
-                  {checksPerDay.toLocaleString()}
-                  <span className="ml-1 text-xs">
-                    ({regions.length || 1} region
-                    {(regions.length || 1) !== 1 ? "s" : ""} ×{" "}
-                    {Math.round((24 * 60 * 60 * 1000) / interval)} checks/day)
-                  </span>
-                </div>
-              );
-            }}
-          </form.Subscribe>
+          <div id="check-config" className="space-y-4">
+            <FormField className="flex-1">
+              <form.Field name="tcpHostPort">
+                {(field) => (
+                  <>
+                    <Label htmlFor="tcpHostPort">Host:Port</Label>
+                    <Input
+                      id="tcpHostPort"
+                      name="tcpHostPort"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                      placeholder="example.com:8080"
+                      className={
+                        field.state.meta.errors?.length
+                          ? "border-destructive"
+                          : ""
+                      }
+                    />
+                    {field.state.meta.errors?.length > 0 && (
+                      <ErrorMessage errors={field.state.meta.errors[0]} />
+                    )}
+                    <p className="text-muted-foreground text-xs">
+                      Enter the hostname and port to check (e.g.,
+                      example.com:8080, database.local:5432)
+                    </p>
+                  </>
+                )}
+              </form.Field>
+            </FormField>
+          </div>
         </div>
 
-        <div id="check-config" className="space-y-4">
-          <h2 className="font-medium">TCP Configuration</h2>
-          <FormField className="flex-1">
-            <form.Field name="tcpHostPort">
-              {(field) => (
-                <>
-                  <Label htmlFor="tcpHostPort">Host:Port</Label>
-                  <Input
-                    id="tcpHostPort"
-                    name="tcpHostPort"
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    onBlur={field.handleBlur}
-                    placeholder="example.com:8080"
-                    className={
-                      field.state.meta.errors?.length
-                        ? "border-destructive"
-                        : ""
-                    }
-                  />
-                  {field.state.meta.errors?.length > 0 && (
-                    <ErrorMessage errors={field.state.meta.errors[0]} />
-                  )}
-                  <p className="text-muted-foreground text-xs">
-                    Enter the hostname and port to check (e.g.,
-                    example.com:8080, database.local:5432)
-                  </p>
-                </>
-              )}
-            </form.Field>
-          </FormField>
-        </div>
+        <Separator />
 
         <div id="monitoring-regions" className="space-y-4">
           <form.Field name="regions">
@@ -251,21 +224,15 @@ export default function TcpMonitorForm({
               <>
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <h2 className="font-medium">Monitoring Regions *</h2>
+                    <h2 className="font-medium">Monitoring Regions</h2>
                     <span className="text-muted-foreground text-xs">
                       {field.state.value.length} region
                       {field.state.value.length !== 1 ? "s" : ""} selected
                     </span>
                   </div>
-                  <p className="text-muted-foreground text-xs">
-                    * Regions are a best effort and not a guarantee. Monitors
-                    will not necessarily be instantiated in the hinted region,
-                    but instead instantiated in a data center selected to
-                    minimize latency.
-                  </p>
                 </div>
 
-                <div className="p-2">
+                <div className="p-1">
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     {[
                       "North America",
@@ -351,6 +318,8 @@ export default function TcpMonitorForm({
             )}
           </form.Field>
         </div>
+
+        <Separator />
 
         <div id="response-time-thresholds" className="space-y-4">
           <h2 className="font-medium">Response Time Thresholds</h2>
