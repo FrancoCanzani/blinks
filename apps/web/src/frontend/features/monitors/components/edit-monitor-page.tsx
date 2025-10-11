@@ -86,8 +86,10 @@ export default function EditMonitorPage() {
       method: monitor.method as "GET" | "POST" | "HEAD",
       interval: monitor.interval,
       regions: monitor.regions,
-      headers: monitor.headers,
-      body: monitor.body || undefined,
+      headersString: monitor.headers
+        ? JSON.stringify(monitor.headers, null, 2)
+        : "",
+      bodyString: monitor.body ? JSON.stringify(monitor.body, null, 2) : "",
       degradedThresholdMs: monitor.degraded_threshold_ms || undefined,
       timeoutThresholdMs: monitor.timeout_threshold_ms || undefined,
     };

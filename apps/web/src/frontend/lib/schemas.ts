@@ -29,13 +29,7 @@ export const HttpMonitorSchema = z
       .trim()
       .min(1, "Monitor name cannot be empty")
       .max(100, "Monitor name is too long"),
-    url: z
-      .string()
-      .trim()
-      .min(1, "URL is required")
-      .refine((val) => z.url().safeParse(val).success, {
-        error: "Invalid URL format",
-      }),
+    url: z.url(),
     method: z.enum(["GET", "POST", "HEAD"], {
       error: "Please select a valid HTTP method",
     }),
@@ -47,7 +41,7 @@ export const HttpMonitorSchema = z
     regions: z
       .array(z.string())
       .min(1, "Please select at least one monitoring region"),
-    headersString: z
+    headers: z
       .string()
       .trim()
       .optional()
@@ -55,7 +49,7 @@ export const HttpMonitorSchema = z
         isValidJSONObject,
         'Headers must be a valid JSON object string, e.g. {"key": "value"}'
       ),
-    bodyString: z
+    body: z
       .string()
       .trim()
       .optional()
@@ -63,10 +57,6 @@ export const HttpMonitorSchema = z
         isValidJSON,
         'Body must be a valid JSON string, e.g. {"key": "value"} or "text"'
       ),
-    slackWebhookUrl: z.string().trim().optional(),
-    enableHeartbeat: z.boolean().optional(),
-    heartbeatId: z.string().trim().optional(),
-    heartbeatTimeoutSeconds: z.number().int().min(30).max(3600).optional(),
     degradedThresholdMs: z
       .number()
       .int()
@@ -117,10 +107,6 @@ export const TcpMonitorSchema = z
     regions: z
       .array(z.string())
       .min(1, "Please select at least one monitoring region"),
-    slackWebhookUrl: z.string().trim().optional(),
-    enableHeartbeat: z.boolean().optional(),
-    heartbeatId: z.string().trim().optional(),
-    heartbeatTimeoutSeconds: z.number().int().min(30).max(3600).optional(),
     degradedThresholdMs: z
       .number()
       .int()

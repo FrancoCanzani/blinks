@@ -1,4 +1,5 @@
 import { Button } from "@/frontend/components/ui/button";
+import { ErrorMessage } from "@/frontend/components/ui/form-error-message";
 import { Input } from "@/frontend/components/ui/input";
 import { Label } from "@/frontend/components/ui/label";
 import { Switch } from "@/frontend/components/ui/switch";
@@ -115,9 +116,7 @@ export function DiscordForm({ config, onSave, isLoading }: DiscordFormProps) {
                       />
                       {field.state.meta.errors &&
                         field.state.meta.errors.length > 0 && (
-                          <p className="text-xs text-red-500">
-                            {String(field.state.meta.errors[0])}
-                          </p>
+                          <ErrorMessage errors={field.state.meta.errors[0]} />
                         )}
                       <p className="text-muted-foreground text-xs">
                         Create a webhook in your Discord server settings

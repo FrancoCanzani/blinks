@@ -22,7 +22,6 @@ type HttpMonitorFormData = {
   regions: string[];
   headers?: Record<string, string>;
   body?: Record<string, unknown> | string;
-  slackWebhookUrl?: string;
   degradedThresholdMs?: number;
   timeoutThresholdMs?: number;
 };
@@ -33,7 +32,6 @@ type TcpMonitorFormData = {
   tcpHostPort: string;
   interval: number;
   regions: string[];
-  slackWebhookUrl?: string;
   degradedThresholdMs?: number;
   timeoutThresholdMs?: number;
 };
@@ -126,7 +124,7 @@ export default function NewMonitorPage() {
         </div>
 
         <div className="space-y-6">
-          <h1 className="font-medium">Create HTTP Monitor</h1>
+          <h1 className="text-lg font-medium">Create HTTP Monitor</h1>
           <HttpMonitorForm
             onSubmit={handleSubmit}
             onCancel={handleCancel}
@@ -150,7 +148,7 @@ export default function NewMonitorPage() {
           </Link>
         </div>
         <div className="space-y-8">
-          <h1 className="font-medium">Create TCP Monitor</h1>
+          <h1 className="text-lg font-medium">Create TCP Monitor</h1>
           <TcpMonitorForm
             onSubmit={handleSubmit}
             onCancel={handleCancel}

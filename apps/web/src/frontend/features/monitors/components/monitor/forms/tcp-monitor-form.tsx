@@ -44,14 +44,7 @@ interface TcpMonitorFormProps {
   onCancel?: () => void;
   isSubmitting?: boolean;
   submitLabel?: string;
-  defaultValues?: Partial<{
-    name: string;
-    tcpHostPort: string;
-    interval: number;
-    regions: string[];
-    degradedThresholdMs?: number;
-    timeoutThresholdMs?: number;
-  }>;
+  defaultValues?: Partial<TcpMonitorFormValues>;
 }
 
 export default function TcpMonitorForm({
@@ -73,20 +66,7 @@ export default function TcpMonitorForm({
   const form = useForm({
     defaultValues: defaultFormValues,
     validators: {
-      onChange: ({ value }) => {
-        const result = TcpMonitorSchema.safeParse(value);
-        if (result.success) return undefined;
-
-        const fieldErrors: Record<string, string> = {};
-
-        for (const issue of result.error.issues) {
-          const path = issue.path.join(".");
-          if (path && !fieldErrors[path]) {
-            fieldErrors[path] = issue.message;
-          }
-        }
-        return { fields: fieldErrors };
-      },
+      onChange: TcpMonitorSchema,
     },
     onSubmit: async ({ value }) => {
       const payload = {
@@ -95,7 +75,6 @@ export default function TcpMonitorForm({
         tcpHostPort: value.tcpHostPort,
         interval: value.interval,
         regions: value.regions,
-        slackWebhookUrl: value.slackWebhookUrl,
         degradedThresholdMs: value.degradedThresholdMs,
         timeoutThresholdMs: value.timeoutThresholdMs,
       };
@@ -310,9 +289,7 @@ export default function TcpMonitorForm({
                 </div>
                 {field.state.meta.errors &&
                   field.state.meta.errors.length > 0 && (
-                    <p className="text-destructive text-sm">
-                      {field.state.meta.errors[0]}
-                    </p>
+                    <ErrorMessage errors={field.state.meta.errors[0]} />
                   )}
               </>
             )}

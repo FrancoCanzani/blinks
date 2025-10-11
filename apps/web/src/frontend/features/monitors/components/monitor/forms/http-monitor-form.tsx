@@ -41,24 +41,13 @@ interface HttpMonitorFormProps {
     regions: string[];
     headers?: Record<string, string>;
     body?: Record<string, unknown> | string;
-    slackWebhookUrl?: string;
     degradedThresholdMs?: number;
     timeoutThresholdMs?: number;
   }) => Promise<void>;
   onCancel?: () => void;
   isSubmitting?: boolean;
   submitLabel?: string;
-  defaultValues?: Partial<{
-    name: string;
-    url: string;
-    method: "GET" | "POST" | "HEAD";
-    interval: number;
-    regions: string[];
-    headers: Record<string, string>;
-    body: Record<string, unknown> | string;
-    degradedThresholdMs?: number;
-    timeoutThresholdMs?: number;
-  }>;
+  defaultValues?: Partial<HttpMonitorFormValues>;
 }
 
 const prettifyJSON = (jsonString: string): string => {
@@ -83,10 +72,10 @@ export default function HttpMonitorForm({
     method: defaultValues?.method ?? "GET",
     interval: defaultValues?.interval ?? 300000,
     regions: defaultValues?.regions ?? [],
-    headersString: defaultValues?.headers
+    headers: defaultValues?.headers
       ? JSON.stringify(defaultValues.headers, null, 2)
       : "",
-    bodyString: defaultValues?.body
+    body: defaultValues?.body
       ? JSON.stringify(defaultValues.body, null, 2)
       : "",
     degradedThresholdMs: defaultValues?.degradedThresholdMs,
@@ -96,35 +85,26 @@ export default function HttpMonitorForm({
   const form = useForm({
     defaultValues: defaultFormValues,
     validators: {
-      onChange: ({ value }) => {
-        const result = HttpMonitorSchema.safeParse(value);
-        if (result.success) return undefined;
-
-        const fieldErrors: Record<string, string> = {};
-
-        for (const issue of result.error.issues) {
-          const path = issue.path.join(".");
-          if (path && !fieldErrors[path]) {
-            fieldErrors[path] = issue.message;
-          }
-        }
-        return { fields: fieldErrors };
-      },
+      onChange: HttpMonitorSchema,
     },
     onSubmit: async ({ value }) => {
       let headers, body;
       try {
-        headers = value.headersString
-          ? JSON.parse(value.headersString)
-          : undefined;
+        headers = value.headers ? JSON.parse(value.headers) : undefined;
       } catch {
-        // TODO: Set field error for invalid JSON
+        form.setFieldMeta("headers", (prev) => ({
+          ...prev,
+          errors: [{ message: "Invalid JSON format in headers" }],
+        }));
         return;
       }
       try {
-        body = value.bodyString ? JSON.parse(value.bodyString) : undefined;
+        body = value.body ? JSON.parse(value.body) : undefined;
       } catch {
-        // TODO: Set field error for invalid JSON
+        form.setFieldMeta("body", (prev) => ({
+          ...prev,
+          errors: [{ message: "Invalid JSON format in body" }],
+        }));
         return;
       }
 
@@ -137,11 +117,6 @@ export default function HttpMonitorForm({
         regions: value.regions,
         headers,
         body,
-        slackWebhookUrl: value.slackWebhookUrl,
-        heartbeatId: value.enableHeartbeat ? value.heartbeatId : undefined,
-        heartbeatTimeoutSeconds: value.enableHeartbeat
-          ? value.heartbeatTimeoutSeconds
-          : undefined,
         degradedThresholdMs: value.degradedThresholdMs,
         timeoutThresholdMs: value.timeoutThresholdMs,
       };
@@ -392,9 +367,7 @@ export default function HttpMonitorForm({
                 </div>
                 {field.state.meta.errors &&
                   field.state.meta.errors.length > 0 && (
-                    <p className="text-destructive text-sm">
-                      {field.state.meta.errors[0]}
-                    </p>
+                    <ErrorMessage errors={field.state.meta.errors[0]} />
                   )}
               </>
             )}
@@ -488,13 +461,11 @@ export default function HttpMonitorForm({
           <h2 className="font-medium">Advanced Options</h2>
           <div className="space-y-4">
             <FormField>
-              <form.Field name="headersString">
+              <form.Field name="headers">
                 {(field) => (
                   <>
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="headersString">
-                        Headers (JSON String)
-                      </Label>
+                      <Label htmlFor="headers">Headers (JSON String)</Label>
                       <Button
                         type="button"
                         variant="outline"
@@ -538,11 +509,11 @@ export default function HttpMonitorForm({
               {(methodField) =>
                 methodField.state.value === "POST" && (
                   <FormField>
-                    <form.Field name="bodyString">
+                    <form.Field name="body">
                       {(field) => (
                         <>
                           <div className="flex items-center justify-between">
-                            <Label htmlFor="bodyString">
+                            <Label htmlFor="body">
                               Request Body (JSON String)
                             </Label>
                             <Button
