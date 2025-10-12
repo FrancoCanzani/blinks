@@ -1,4 +1,5 @@
 import { Button } from "@/frontend/components/ui/button";
+import { ErrorMessage } from "@/frontend/components/ui/form-error-message";
 import { Input } from "@/frontend/components/ui/input";
 import { Label } from "@/frontend/components/ui/label";
 import {
@@ -53,7 +54,7 @@ export default function WorkspaceForm({
   const defaultValues = {
     slug: "",
     name: "",
-    description: undefined,
+    description: "",
     members: [],
     ...initialValues,
   };
@@ -68,17 +69,7 @@ export default function WorkspaceForm({
       }
     },
     validators: {
-      onChange: ({ value }) => {
-        const result = WorkspaceSchema.safeParse(value);
-        if (!result.success) {
-          const flattened = z.flattenError(result.error);
-          return {
-            fields: flattened.fieldErrors,
-            form: flattened.formErrors,
-          };
-        }
-        return undefined;
-      },
+      onChange: WorkspaceSchema,
     },
   });
 
@@ -129,9 +120,7 @@ export default function WorkspaceForm({
                 application.
               </p>
               {field.state.meta.errors?.length > 0 && (
-                <p className="text-destructive text-xs">
-                  {field.state.meta.errors[0]}
-                </p>
+                <ErrorMessage errors={field.state.meta.errors[0]} />
               )}
             </>
           )}
@@ -176,9 +165,7 @@ export default function WorkspaceForm({
                 lowercase letters, numbers, and hyphens.
               </p>
               {field.state.meta.errors?.length > 0 && (
-                <p className="text-destructive text-xs">
-                  {field.state.meta.errors[0]}
-                </p>
+                <ErrorMessage errors={field.state.meta.errors[0]} />
               )}
             </>
           )}
@@ -203,9 +190,7 @@ export default function WorkspaceForm({
                 rows={3}
               />
               {field.state.meta.errors?.length > 0 && (
-                <p className="text-destructive text-xs">
-                  {field.state.meta.errors[0]}
-                </p>
+                <ErrorMessage errors={field.state.meta.errors[0]} />
               )}
             </>
           )}
@@ -334,12 +319,9 @@ export default function WorkspaceForm({
                   </div>
                 </div>
               )}
-              {membersApi.state.meta.errors &&
-                typeof membersApi.state.meta.errors[0] === "string" && (
-                  <p className="text-destructive text-xs">
-                    {membersApi.state.meta.errors[0]}
-                  </p>
-                )}
+              {membersApi.state.meta.errors?.length > 0 && (
+                <ErrorMessage errors={membersApi.state.meta.errors[0]} />
+              )}
             </>
           )}
         </form.Field>
@@ -351,7 +333,7 @@ export default function WorkspaceForm({
             <Button
               type="button"
               variant="destructive"
-              size="sm"
+              size="xs"
               onClick={handleDelete}
               disabled={isSubmitting || isDeleting}
             >
@@ -364,7 +346,7 @@ export default function WorkspaceForm({
             <Button
               type="button"
               variant="ghost"
-              size="sm"
+              size="xs"
               onClick={onCancel}
               disabled={isSubmitting || isDeleting}
             >
@@ -378,7 +360,7 @@ export default function WorkspaceForm({
             {([canSubmit, isDirty]) => (
               <Button
                 type="submit"
-                size="sm"
+                size="xs"
                 disabled={isSubmitting || !canSubmit || !isDirty || isDeleting}
               >
                 {isSubmitting ? "Creating..." : submitLabel}

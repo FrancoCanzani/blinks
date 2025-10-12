@@ -1,10 +1,10 @@
 import { Button } from "@/frontend/components/ui/button";
+import { ErrorMessage } from "@/frontend/components/ui/form-error-message";
 import { Input } from "@/frontend/components/ui/input";
 import { Label } from "@/frontend/components/ui/label";
 import { ProfileSchema } from "@/frontend/lib/schemas";
 import { ProfileFormValues } from "@/frontend/lib/types";
 import { useForm } from "@tanstack/react-form";
-import { z } from "zod";
 
 interface ProfileFormProps {
   initialValues?: Partial<ProfileFormValues>;
@@ -37,17 +37,7 @@ export default function ProfileForm({
       }
     },
     validators: {
-      onChange: ({ value }) => {
-        const result = ProfileSchema.safeParse(value);
-        if (!result.success) {
-          const flattened = z.flattenError(result.error);
-          return {
-            fields: flattened.fieldErrors,
-            form: flattened.formErrors,
-          };
-        }
-        return undefined;
-      },
+      onChange: ProfileSchema,
     },
   });
 
@@ -81,9 +71,7 @@ export default function ProfileForm({
                 }`}
               />
               {field.state.meta.errors?.length > 0 && (
-                <p className="mt-1 text-xs text-red-600">
-                  {field.state.meta.errors[0]}
-                </p>
+                <ErrorMessage errors={field.state.meta.errors[0]} />
               )}
             </div>
           )}
@@ -110,9 +98,7 @@ export default function ProfileForm({
                 }`}
               />
               {field.state.meta.errors?.length > 0 && (
-                <p className="mt-1 text-xs text-red-600">
-                  {field.state.meta.errors[0]}
-                </p>
+                <ErrorMessage errors={field.state.meta.errors[0]} />
               )}
             </div>
           )}

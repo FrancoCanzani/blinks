@@ -155,10 +155,7 @@ export const WorkspaceSchema = z.object({
     .string()
     .min(1, "Workspace name is required")
     .max(100, "Workspace name cannot exceed 100 characters"),
-  description: z
-    .string()
-    .max(500, "Description cannot exceed 500 characters")
-    .optional(),
+  description: z.string().max(500, "Description cannot exceed 500 characters"),
   members: z.array(
     z.object({
       id: z.string().optional(),
@@ -191,12 +188,12 @@ export const StatusPageSchema = z.object({
     .string()
     .max(500, "Description cannot exceed 500 characters")
     .optional(),
-  showValues: z.boolean().default(true),
+  showValues: z.boolean(),
   password: z
     .string()
     .max(100, "Password cannot exceed 100 characters")
     .optional(),
-  isPublic: z.boolean().default(true),
+  isPublic: z.boolean(),
   monitors: z.array(z.string()).min(1, "Please select at least one monitor"),
 });
 

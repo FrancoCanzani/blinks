@@ -41,20 +41,7 @@ export default function CollectorForm({
   const form = useForm({
     defaultValues: defaultFormValues,
     validators: {
-      onChange: ({ value }) => {
-        const result = CollectorSchema.safeParse(value);
-        if (result.success) return undefined;
-
-        const fieldErrors: Record<string, string> = {};
-
-        for (const issue of result.error.issues) {
-          const path = issue.path.join(".");
-          if (path && !fieldErrors[path]) {
-            fieldErrors[path] = issue.message;
-          }
-        }
-        return { fields: fieldErrors };
-      },
+      onChange: CollectorSchema,
     },
     onSubmit: async ({ value }) => {
       await onSubmit({
@@ -137,7 +124,7 @@ export default function CollectorForm({
         )}
 
         <div className="flex justify-end space-x-4">
-          <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
+          <Button type="button" variant="ghost" size="xs" onClick={onCancel}>
             Cancel
           </Button>
           <form.Subscribe
@@ -146,7 +133,7 @@ export default function CollectorForm({
             {([canSubmit, formIsSubmitting]) => (
               <Button
                 type="submit"
-                size="sm"
+                size="xs"
                 disabled={isSubmitting || formIsSubmitting || !canSubmit}
               >
                 {isSubmitting || formIsSubmitting

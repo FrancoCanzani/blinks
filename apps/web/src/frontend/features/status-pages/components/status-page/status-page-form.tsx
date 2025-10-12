@@ -1,4 +1,5 @@
 import { Button } from "@/frontend/components/ui/button";
+import { ErrorMessage } from "@/frontend/components/ui/form-error-message";
 import { Input } from "@/frontend/components/ui/input";
 import { Label } from "@/frontend/components/ui/label";
 import { Textarea } from "@/frontend/components/ui/textarea";
@@ -8,7 +9,6 @@ import { cn } from "@/frontend/lib/utils";
 import { useForm } from "@tanstack/react-form";
 import { Check, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { z } from "zod";
 
 interface StatusPageFormProps {
   initialValues?: Partial<StatusPageFormValues>;
@@ -51,25 +51,7 @@ export default function StatusPageForm({
       }
     },
     validators: {
-      onChange: ({ value }) => {
-        try {
-          StatusPageSchema.parse(value);
-          return undefined;
-        } catch (error) {
-          if (error instanceof z.ZodError) {
-            const fieldErrors: Record<string, string> = {};
-            error.issues.forEach((err) => {
-              const path = err.path.join(".");
-              fieldErrors[path] = err.message;
-            });
-
-            return {
-              fields: fieldErrors,
-            };
-          }
-          return { form: "Invalid form data" };
-        }
-      },
+      onChange: StatusPageSchema,
     },
   });
 
@@ -103,9 +85,7 @@ export default function StatusPageForm({
                     }
                   />
                   {field.state.meta.errors?.length > 0 && (
-                    <p className="text-destructive text-sm">
-                      {field.state.meta.errors[0]}
-                    </p>
+                    <ErrorMessage errors={field.state.meta.errors[0]} />
                   )}
                 </>
               )}
@@ -137,9 +117,7 @@ export default function StatusPageForm({
                     />
                   </div>
                   {field.state.meta.errors?.length > 0 && (
-                    <p className="text-destructive text-sm">
-                      {field.state.meta.errors[0]}
-                    </p>
+                    <ErrorMessage errors={field.state.meta.errors[0]} />
                   )}
                 </>
               )}
@@ -165,9 +143,7 @@ export default function StatusPageForm({
                   }
                 />
                 {field.state.meta.errors?.length > 0 && (
-                  <p className="text-destructive text-sm">
-                    {field.state.meta.errors[0]}
-                  </p>
+                  <ErrorMessage errors={field.state.meta.errors[0]} />
                 )}
               </>
             )}
@@ -242,7 +218,7 @@ export default function StatusPageForm({
                   <Button
                     type="button"
                     variant="ghost"
-                    size="sm"
+                    size="xs"
                     className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                   >
@@ -254,9 +230,7 @@ export default function StatusPageForm({
                   </Button>
                 </div>
                 {field.state.meta.errors?.length > 0 && (
-                  <p className="text-destructive text-sm">
-                    {field.state.meta.errors[0]}
-                  </p>
+                  <ErrorMessage errors={field.state.meta.errors[0]} />
                 )}
                 <p className="text-muted-foreground text-xs">
                   Visitors will need to enter this password to view the status
@@ -339,9 +313,7 @@ export default function StatusPageForm({
               </div>
 
               {field.state.meta.errors?.length > 0 && (
-                <p className="text-destructive text-sm">
-                  {field.state.meta.errors[0]}
-                </p>
+                <ErrorMessage errors={field.state.meta.errors[0]} />
               )}
             </>
           )}
@@ -349,10 +321,10 @@ export default function StatusPageForm({
       </div>
 
       <div className="flex justify-end space-x-4">
-        <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
+        <Button type="button" variant="ghost" size="xs" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" size="sm" disabled={isSubmitting}>
+        <Button type="submit" size="xs" disabled={isSubmitting}>
           {isSubmitting ? "Submitting..." : submitLabel}
         </Button>
       </div>

@@ -61,20 +61,7 @@ export default function HeartbeatForm({
   const form = useForm({
     defaultValues,
     validators: {
-      onChange: ({ value }) => {
-        const result = HeartbeatSchema.safeParse(value);
-        if (result.success) return undefined;
-
-        const fieldErrors: Record<string, string> = {};
-
-        for (const issue of result.error.issues) {
-          const path = issue.path.join(".");
-          if (path && !fieldErrors[path]) {
-            fieldErrors[path] = issue.message;
-          }
-        }
-        return { fields: fieldErrors };
-      },
+      onChange: HeartbeatSchema,
     },
     onSubmit: async ({ value }) => {
       await onSubmit(value);
@@ -258,7 +245,7 @@ export default function HeartbeatForm({
       </div>
 
       <div className="flex justify-end gap-3">
-        <Button type="button" variant="outline" size="sm" onClick={onCancel}>
+        <Button type="button" variant="outline" size="xs" onClick={onCancel}>
           Cancel
         </Button>
         <form.Subscribe
@@ -267,16 +254,16 @@ export default function HeartbeatForm({
           {([canSubmit, formIsSubmitting]) => (
             <Button
               type="submit"
-              size="sm"
+              size="xs"
               disabled={formIsSubmitting || !canSubmit}
             >
               {formIsSubmitting
                 ? heartbeat
-                  ? "Updating..."
-                  : "Creating..."
+                  ? "Updating Heartbeat..."
+                  : "Creating Heartbeat..."
                 : heartbeat
-                  ? "Update"
-                  : "Create"}
+                  ? "Update Heartbeat"
+                  : "Create Heartbeat"}
             </Button>
           )}
         </form.Subscribe>

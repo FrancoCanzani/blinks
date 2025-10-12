@@ -157,7 +157,7 @@ export function SlackForm({ config, onSave, isLoading }: SlackFormProps) {
           {([canSubmit, isSubmitting]) => (
             <Button
               type="submit"
-              size={"sm"}
+              size={"xs"}
               disabled={!canSubmit || isSubmitting || isLoading}
             >
               {isSubmitting || isLoading ? "Saving..." : "Save Configuration"}

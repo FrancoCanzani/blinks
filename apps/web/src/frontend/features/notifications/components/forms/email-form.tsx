@@ -75,7 +75,7 @@ export function EmailForm({ config, onSave, isLoading }: EmailFormProps) {
           {([canSubmit, isSubmitting]) => (
             <Button
               type="submit"
-              size={"sm"}
+              size={"xs"}
               disabled={!canSubmit || isSubmitting || isLoading}
             >
               {isSubmitting || isLoading ? "Saving..." : "Save Configuration"}

@@ -156,7 +156,7 @@ export function DiscordForm({ config, onSave, isLoading }: DiscordFormProps) {
           {([canSubmit, isSubmitting]) => (
             <Button
               type="submit"
-              size={"sm"}
+              size={"xs"}
               disabled={!canSubmit || isSubmitting || isLoading}
             >
               {isSubmitting || isLoading ? "Saving..." : "Save Configuration"}
