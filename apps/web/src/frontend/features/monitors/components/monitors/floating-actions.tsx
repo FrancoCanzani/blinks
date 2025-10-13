@@ -1,5 +1,6 @@
 import { Button } from "@/frontend/components/ui/button";
 import { showToastTimer } from "@/frontend/components/ui/toast-timer";
+import { useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { useDeleteMonitor, usePauseResumeMonitor } from "../../api/mutations";
 import { MonitorWithMetrics } from "../../types";
@@ -15,6 +16,7 @@ export default function FloatingActions({
 }: FloatingActionsProps) {
   const [isDeleteToastOpen, setIsDeleteToastOpen] = useState(false);
 
+  const router = useRouter();
   const pauseOrResumeMutation = usePauseResumeMonitor();
   const deleteMonitorMutation = useDeleteMonitor();
 
@@ -24,6 +26,7 @@ export default function FloatingActions({
       monitorId,
       status: newStatus as "active" | "paused",
     });
+    router.invalidate();
   };
 
   const handleBulkPause = () => {
@@ -49,6 +52,7 @@ export default function FloatingActions({
       deleteMonitorMutation.mutate(monitor.id);
     });
     onSelectionChange();
+    router.invalidate();
   };
 
   const canPause = selectedMonitors.some((m) => m.status !== "paused");
@@ -97,7 +101,7 @@ export default function FloatingActions({
               handleBulkDelete();
               setIsDeleteToastOpen(false);
             },
-            duration: 500000,
+            duration: 5000,
           });
         }}
         className="h-6 px-2 text-xs"

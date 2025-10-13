@@ -2,12 +2,6 @@ import supabase from "@/frontend/lib/supabase";
 import { Profile, ProfileFormValues } from "@/frontend/lib/types";
 
 export async function fetchProfile(): Promise<Profile> {
-  const { data: claimsData, error: claimsError } =
-    await supabase.auth.getClaims();
-  if (claimsError || !claimsData?.claims) {
-    throw new Error("Failed to get authentication claims");
-  }
-
   const {
     data: { session },
     error: sessionError,
@@ -32,12 +26,6 @@ export async function fetchProfile(): Promise<Profile> {
 }
 
 export async function updateProfile(data: ProfileFormValues): Promise<Profile> {
-  const { data: claimsData, error: claimsError } =
-    await supabase.auth.getClaims();
-  if (claimsError || !claimsData?.claims) {
-    throw new Error("Failed to get authentication claims");
-  }
-
   const {
     data: { session },
     error: sessionError,

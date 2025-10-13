@@ -340,7 +340,7 @@ export class MonitorCheckService {
 
   async performTcpCheck(
     hostPort: string | null,
-    timeoutThresholdMs?: number
+    timeoutThresholdMs?: number | null
   ): Promise<CheckResult> {
     if (!hostPort || typeof hostPort !== "string") {
       throw new Error("Valid host:port is required for TCP check");
@@ -466,7 +466,7 @@ export class MonitorCheckService {
 
   private async performTcpCheckInternal(
     hostPort: string | null,
-    timeoutThresholdMs?: number
+    timeoutThresholdMs?: number | null
   ): Promise<CheckResult> {
     const checkStartTime = performance.now();
     const result: CheckResult = {

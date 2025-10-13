@@ -21,7 +21,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         content: "My App is a web application",
       },
       {
-        title: "My App",
+        title: "Shamva",
       },
     ],
   }),

@@ -22,12 +22,6 @@ export function useCreateCollector() {
         throw new Error("Failed to get authentication session");
       }
 
-      const { data: claimsData, error: claimsError } =
-        await supabase.auth.getClaims();
-      if (claimsError || !claimsData?.claims) {
-        throw new Error("Failed to validate authentication claims");
-      }
-
       const response = await fetch(`/api/v1/collectors`, {
         method: "POST",
         headers: {
@@ -66,12 +60,6 @@ export function useFetchCollectors(workspaceId: string) {
 
       if (sessionError || !session?.access_token) {
         throw new Error("Failed to get authentication session");
-      }
-
-      const { data: claimsData, error: claimsError } =
-        await supabase.auth.getClaims();
-      if (claimsError || !claimsData?.claims) {
-        throw new Error("Failed to validate authentication claims");
       }
 
       if (!workspaceId) {
@@ -120,12 +108,6 @@ export function useUpdateCollector() {
         throw new Error("Failed to get authentication session");
       }
 
-      const { data: claimsData, error: claimsError } =
-        await supabase.auth.getClaims();
-      if (claimsError || !claimsData?.claims) {
-        throw new Error("Failed to validate authentication claims");
-      }
-
       const response = await fetch(`/api/v1/collectors/${collectorId}`, {
         method: "PUT",
         headers: {
@@ -162,12 +144,6 @@ export function useDeleteCollector() {
 
       if (sessionError || !session?.access_token) {
         throw new Error("Failed to get authentication session");
-      }
-
-      const { data: claimsData, error: claimsError } =
-        await supabase.auth.getClaims();
-      if (claimsError || !claimsData?.claims) {
-        throw new Error("Failed to validate authentication claims");
       }
 
       const response = await fetch(`/api/v1/collectors/${collectorId}`, {

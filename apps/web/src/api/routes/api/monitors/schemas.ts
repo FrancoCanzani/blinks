@@ -64,6 +64,10 @@ export const MonitorBodySchema = z.object({
   timeoutThresholdMs: z.number().int().min(1000).max(600000).optional(),
 });
 
+export const MonitorPatchSchema = z.object({
+  status: z.enum(["active", "paused"]).optional(),
+});
+
 export const MonitorCreateBodySchema = MonitorBodySchema.extend({
   name: z.string().min(1).max(100),
   checkType: z.enum(["http", "tcp"]),

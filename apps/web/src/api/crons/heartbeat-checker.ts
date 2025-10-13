@@ -1,10 +1,7 @@
-import { EnvBindings } from "../../../bindings";
 import { supabase } from "../lib/supabase/client";
 import { Heartbeat } from "../lib/types";
 
-export async function handleHeartbeatCheckerCron(
-  env: EnvBindings
-): Promise<void> {
+export async function handleHeartbeatCheckerCron(): Promise<void> {
   console.log(
     "Starting heartbeat checker cron job at",
     new Date().toISOString()
@@ -77,7 +74,7 @@ export async function handleHeartbeatCheckerCron(
           console.error("Error logging heartbeat timeout:", logInsertError);
         }
 
-        await sendHeartbeatAlert(env, heartbeat);
+        await sendHeartbeatAlert(heartbeat);
       } catch (error) {
         console.error(
           `Error processing timed out heartbeat ${heartbeat.id}:`,
@@ -95,10 +92,7 @@ export async function handleHeartbeatCheckerCron(
   }
 }
 
-async function sendHeartbeatAlert(
-  env: EnvBindings,
-  heartbeat: Heartbeat
-): Promise<void> {
+async function sendHeartbeatAlert(heartbeat: Heartbeat): Promise<void> {
   try {
     const { data: workspaceMembers } = await supabase
       .from("workspace_members")

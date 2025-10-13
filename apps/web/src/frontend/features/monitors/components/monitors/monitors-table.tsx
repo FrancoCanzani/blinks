@@ -353,12 +353,14 @@ export default function MonitorsTable({
             monitorId: monitor.id,
             status: newStatus,
           });
+          router.invalidate();
         };
 
         const handleDelete = (e: React.MouseEvent) => {
           e.stopPropagation();
           if (confirm(`Are you sure you want to delete "${monitor.name}"?`)) {
             deleteMonitorMutation.mutate(monitor.id);
+            router.invalidate();
           }
         };
 

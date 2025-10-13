@@ -18,12 +18,6 @@ export function useCreateWorkspace() {
         throw new Error("Failed to get authentication session");
       }
 
-      const { data: claimsData, error: claimsError } =
-        await supabase.auth.getClaims();
-      if (claimsError || !claimsData?.claims) {
-        throw new Error("Failed to validate authentication claims");
-      }
-
       const response = await fetch(`/api/v1/workspaces`, {
         method: "POST",
         headers: {
@@ -65,12 +59,6 @@ export function useUpdateWorkspace() {
         throw new Error("Failed to get authentication session");
       }
 
-      const { data: claimsData, error: claimsError } =
-        await supabase.auth.getClaims();
-      if (claimsError || !claimsData?.claims) {
-        throw new Error("Failed to validate authentication claims");
-      }
-
       const response = await fetch(`/api/v1/workspaces/${workspaceId}`, {
         method: "PUT",
         headers: {
@@ -105,12 +93,6 @@ export function useDeleteWorkspace() {
 
       if (sessionError || !session?.access_token) {
         throw new Error("Failed to get authentication session");
-      }
-
-      const { data: claimsData, error: claimsError } =
-        await supabase.auth.getClaims();
-      if (claimsError || !claimsData?.claims) {
-        throw new Error("Failed to validate authentication claims");
       }
 
       const response = await fetch(`/api/v1/workspaces/${workspaceId}`, {

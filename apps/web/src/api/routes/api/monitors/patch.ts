@@ -1,17 +1,23 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
+import { HTTPException } from "hono/http-exception";
 import type { EnvBindings } from "../../../../../bindings";
 import { supabase } from "../../../lib/supabase/client";
 import type { ApiVariables } from "../../../lib/types";
-import { HTTPException } from "hono/http-exception";
 import { openApiErrorResponses } from "../../../lib/utils";
-import { MonitorSchema, UUIDParamSchema } from "./schemas";
+import { MonitorPatchSchema, MonitorSchema, UUIDParamSchema } from "./schemas";
 
 const route = createRoute({
   method: "patch",
   path: "/monitors/:id",
   request: {
     params: UUIDParamSchema,
-    body: { content: { "application/json": { schema: z.object({}) } } },
+    body: {
+      content: {
+        "application/json": {
+          schema: MonitorPatchSchema,
+        },
+      },
+    },
   },
   responses: {
     200: {

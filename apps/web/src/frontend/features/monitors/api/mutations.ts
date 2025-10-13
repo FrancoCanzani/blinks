@@ -22,12 +22,6 @@ export function useCreateMonitor() {
         throw new Error("Failed to get authentication session");
       }
 
-      const { data: claimsData, error: claimsError } =
-        await supabase.auth.getClaims();
-      if (claimsError || !claimsData?.claims) {
-        throw new Error("Failed to validate authentication claims");
-      }
-
       const response = await fetch(`/api/v1/monitors`, {
         method: "POST",
         headers: {
@@ -72,12 +66,6 @@ export function useUpdateMonitor() {
         throw new Error("Failed to get authentication session");
       }
 
-      const { data: claimsData, error: claimsError } =
-        await supabase.auth.getClaims();
-      if (claimsError || !claimsData?.claims) {
-        throw new Error("Failed to validate authentication claims");
-      }
-
       const response = await fetch(`/api/v1/monitors/${monitorId}`, {
         method: "PUT",
         headers: {
@@ -112,12 +100,6 @@ export function useDeleteMonitor() {
 
       if (sessionError || !session?.access_token) {
         throw new Error("Failed to get authentication session");
-      }
-
-      const { data: claimsData, error: claimsError } =
-        await supabase.auth.getClaims();
-      if (claimsError || !claimsData?.claims) {
-        throw new Error("Failed to validate authentication claims");
       }
 
       const response = await fetch(`/api/v1/monitors/${monitorId}`, {
@@ -159,12 +141,6 @@ export function usePauseResumeMonitor() {
         throw new Error("Failed to get authentication session");
       }
 
-      const { data: claimsData, error: claimsError } =
-        await supabase.auth.getClaims();
-      if (claimsError || !claimsData?.claims) {
-        throw new Error("Failed to validate authentication claims");
-      }
-
       const response = await fetch(`/api/v1/monitors/${monitorId}`, {
         method: "PATCH",
         headers: {
@@ -178,13 +154,15 @@ export function usePauseResumeMonitor() {
       }
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (_, { status }) => {
       queryClient.invalidateQueries({ queryKey: ["monitors"] });
       queryClient.invalidateQueries({ queryKey: ["monitor"] });
-      toast.success("Monitor status updated successfully");
+      const action = status === "paused" ? "paused" : "resumed";
+      toast.success(`Monitor ${action} successfully`);
     },
-    onError: () => {
-      toast.error("Failed to update monitor status");
+    onError: (_, { status }) => {
+      const action = status === "paused" ? "pause" : "resume";
+      toast.error(`Failed to ${action} monitor`);
     },
   });
 }

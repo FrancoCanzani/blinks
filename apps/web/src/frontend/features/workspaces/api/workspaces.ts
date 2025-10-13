@@ -2,12 +2,6 @@ import supabase from "@/frontend/lib/supabase";
 import { ApiResponse, Workspace } from "@/frontend/lib/types";
 
 export default async function fetchWorkspaces(): Promise<Workspace[]> {
-  const { data: claimsData, error: claimsError } =
-    await supabase.auth.getClaims();
-  if (claimsError || !claimsData?.claims) {
-    throw new Error("Failed to get authentication claims");
-  }
-
   const {
     data: { session },
     error: sessionError,

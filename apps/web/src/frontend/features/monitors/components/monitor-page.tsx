@@ -83,11 +83,13 @@ export default function MonitorPage() {
 
   const handleDelete = () => {
     deleteMonitorMutation.mutate(id);
+    router.invalidate();
   };
 
   const handlePauseOrResumeMonitor = () => {
     const newStatus = monitor.status === "paused" ? "active" : "paused";
     pauseResumeMutation.mutate({ monitorId: id, status: newStatus });
+    router.invalidate();
   };
 
   return (

@@ -1,5 +1,5 @@
-import { RouterContext } from "@/frontend/routes/__root";
 import { ApiResponse } from "@/frontend/lib/types";
+import { RouterContext } from "@/frontend/routes/__root";
 import { redirect } from "@tanstack/react-router";
 import { MonitorWithIncidents } from "../types";
 
@@ -35,7 +35,7 @@ export default async function fetchMonitor({
     if (response.status === 401) {
       console.log("API returned 401, redirecting to login.");
       throw redirect({
-        to: "/auth/login",
+        to: "/auth/log-in",
         search: { redirect: `/dashboard/monitors/${id}` },
         throw: true,
       });

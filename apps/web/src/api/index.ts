@@ -127,7 +127,7 @@ export default {
       case "* * * * *":
         // Every minute - run monitor and heartbeat checks
         await handleMonitorCheckerCron(env);
-        await handleHeartbeatCheckerCron(env);
+        await handleHeartbeatCheckerCron();
         break;
       case "0 0 * * 1":
         // Every Sunday at midnight - run log cleanup
